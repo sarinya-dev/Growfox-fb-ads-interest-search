@@ -1,0 +1,148 @@
+css
+/* Global styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #E2E2E2;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+.App
+{
+  align-items: stretch;
+  width: 100%;
+
+}
+/* Full-width Navbar */
+.navbar {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  padding: 20px;
+  background-color: #000;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  box-shadow: 0px 2px 5px rgba(255, 165, 0, 0.3);
+}
+.body {
+  background-color: #E2E2E2;
+  align-items: center;
+
+}
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.company-logo {
+  height: 50px;
+  margin-right: 10px;
+}
+
+.menu ul {
+  list-style-type: none;
+}
+
+.menu ul li {
+  display: inline-block;
+  margin-left: 20px;
+}
+
+.menu ul li a {
+  color: #ffa500;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 10px 15px;
+  transition: background-color 0.3s;
+}
+
+.menu ul li a:hover {
+  background-color: #ffa500;
+  color: #000;
+  border-radius: 5px;
+}
+
+/* Centered Search Section and Results Table */
+.search-section {
+  width: 70%;
+  margin: 50px auto;
+  text-align: center;
+}
+
+/* Search container */
+.search-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-box {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+  margin-right: 10px;
+  border: 1px solid #ffa500;
+  border-radius: 5px;
+  background-color: #333;
+  color: #fff;
+}
+
+.search-button, .settings-button {
+  padding: 10px 20px;
+  background-color: #ffa500;
+  color: #000;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.search-button:hover, .settings-button:hover {
+  background-color: #ff8c00;
+}
+
+/* Filters section */
+.filter-container {
+  margin-bottom: 20px;
+}
+
+.filter-container label {
+  margin-right: 20px;
+}
+
+/* Results Table */
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #2e2e2e;
+  color: #fff;
+}
+
+.results-table th,
+.results-table td {
+  border: 1px solid #ffa500;
+  padding: 10px;
+  text-align: left;
+}
+
+.results-table th {
+  background-color: #ffa500;
+  color: #000;
+}
+
+.results-table td {
+  background-color: #333;
+}
+
+/* Error message */
+.error {
+  color: red;
+  margin-top: 10px;
+}

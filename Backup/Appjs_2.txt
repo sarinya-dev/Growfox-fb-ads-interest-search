@@ -1,0 +1,189 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+import './App.css';
+
+import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
+import 'bootstrap/dist/js/bootstrap.min.js'; // Import Bootstrap JS
+import 'jquery/dist/jquery.min.js'; // Import jQuery
+import 'popper.js/dist/umd/popper.min.js'; // Import Popper.js
+import Button from 'react-bootstrap/Button';
+import Dropdown   from 'react-bootstrap/Dropdown'; // Import Bootstrap components
+import DropdownButton   from 'react-bootstrap/DropdownButton'; // Import Bootstrap components
+import { Collapse } from 'react-bootstrap';
+
+function App() {
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState([]);
+  const [longTermToken, setLongTermToken] = useState(''); // Store the long-term token
+  const [error, setError] = useState('');
+  const [language, setLanguage] = useState('en_US');  // Default to English (US)
+  
+  const [filters, setFilters] = useState({
+    language: 'English',
+    audienceLower: 100,
+    audienceUpper: 10000000000,
+  });
+  const [showSettings, setShowSettings] = useState(false); // Control visibility of settings
+
+  const handleSearch = async () => {
+    if (!query) {
+      alert('Please enter a search term');
+      return;
+    }
+
+    try {
+      const response = await axios.post('http://localhost:3001/search', {
+        query,
+        filters,
+      });
+      setResults(response.data);
+     // setResults(response.data.interests); // Set the search results
+      setLongTermToken(response.data.longTermToken); // Capture the long-term token
+      setError('');
+    } catch (err) {
+      console.error('Error fetching data:', err);
+      setError('Failed to fetch results.');
+    }
+  };
+
+  const handleFiltersChange = (e) => {
+    setFilters({
+      ...filters,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const toggleSettings = () => {
+    setShowSettings(!showSettings);
+  };
+
+  return (
+    <div className="App">
+      {/* Navbar */}
+      <header className="navbar navbar-expand-lg navbar-dark bg-dark">
+        <title>Growfox - Marketing</title>
+        <div className="container">
+          <a className="navbar-brand" href="#">
+            <img src="https://growfox.co/wp-content/uploads/2023/04/Main-Logo.png" alt="Company Logo" className="company-logo" />
+          </a>
+          <div className="collapse navbar-collapse">
+            <ul className="navbar-nav ml-auto">
+              <li className="nav-item dropdown">
+                <a className="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+                  Tools
+                </a>
+                <div className="dropdown-menu">
+                  <a className="dropdown-item" href="#">
+                    <img src="./facebook-logo.png" lt="Facebook " style={{ width: '16px', marginRight: '8px' }} />
+                    Facebook Interest Search
+                  </a>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content    <a href="http://localhost:3002/auth/facebook">Login with Facebook</a>*/}
+      <main>
+    
+        <section id="search-section" className="search-section container mt-4">
+          <div className="search-container d-flex justify-content-between align-items-center">
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Enter interest..."
+              className="form-control"
+              style={{ flex: 1, marginRight: '10px' }}
+            />
+            <button onClick={handleSearch} className="btn btn-primary">Search</button>
+            <button className="btn btn-secondary ml-2" onClick={toggleSettings}>Settings</button>
+          </div>
+
+          {/* Settings Section */}
+          <Collapse in={showSettings}>
+            <div className="settings-section p-3 mt-3" style={{ backgroundColor: '#383838', color: '#fff' }}>
+              <div className="d-flex justify-content-between">
+                <div className="form-group">
+                  <label htmlFor="language">Language</label>
+                  <select
+                    className="form-control"
+                    id="language"
+                    name="language"
+                    value={filters.language}
+                    onChange={handleFiltersChange}
+                  >
+                    <option value="en_US">English</option>
+                    <option value="th_TH">Thai</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="audienceLower">Min Audience Size</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    id="audienceLower"
+                    name="audienceLower"
+                    value={filters.audienceLower}
+                    onChange={handleFiltersChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="audienceUpper">Max Audience Size</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    id="audienceUpper"
+                    name="audienceUpper"
+                    value={filters.audienceUpper}
+                    onChange={handleFiltersChange}
+                  />
+                </div>
+              </div>
+            </div>
+            </Collapse>
+          
+          {error && <p className="text-danger mt-3">{error}</p>}
+
+          {/* Results Table */}
+          {results.length > 0 && (
+            <table className="table table-dark table-striped mt-4">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Audience Size (Lower)</th>
+                  <th>Audience Size (Upper)</th>
+
+                  <th>Path 1</th>
+                  <th>Path 2</th>
+                  <th>Path 3</th>
+                  <th>Description</th>
+                  <th>Topic</th>
+                </tr>
+              </thead>
+              <tbody>
+                {results.map((interest) => (
+                  <tr key={interest.id}>
+                    <td>{interest.id}</td>
+                    <td>{interest.name}</td>
+                    <td>{interest.audience_size_lower_bound}</td>
+                    <td> {interest.audience_size_upper_bound}</td>
+                    <td>{interest.path[0]}</td>
+                    <td>{interest.path[1] || 'N/A'}</td>
+                    <td>{interest.path[2] || 'N/A'}</td>
+                    <td>{interest.description || 'N/A'}</td>
+                    <td>{interest.topic || 'N/A'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </section>
+      </main>
+    </div>
+  );
+}
+
+export default App;
